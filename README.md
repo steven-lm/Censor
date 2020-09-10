@@ -1,2 +1,2 @@
 # MSA-web
-webapp
+ai webapp
