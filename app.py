@@ -22,15 +22,14 @@ from azure.cognitiveservices.vision.face.models import TrainingStatusType, Perso
 
 app = Flask(__name__)
 
-# Set the FACE_SUBSCRIPTION_KEY environment variable with your key as the value.
-# This key will serve all examples in this document.
+# Set the FACE_SUBSCRIPTION_KEY environment variable
 KEY = os.environ['FACE_SUBSCRIPTION_KEY']
 
+# Photos will be uploaded to the static folder
 UPLOAD_FOLDER = "static"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Set the FACE_ENDPOINT environment variable with the endpoint from your Face service in Azure.
-# This endpoint will be used in all examples in this quickstart.
+# Set the FACE_ENDPOINT environment variable 
 ENDPOINT = os.environ['FACE_ENDPOINT']
 face_credentials = CognitiveServicesCredentials(KEY)
 face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
@@ -61,23 +60,15 @@ def index():
         #image.save(os.path.join("static", image.filename));
         image.seek(0)
 
-        # Use the Computer Vision API to extract text from the image
+        # Use face API to find faces in photo
         blur_faces(image, face_client)
         uri = "/static/out.jpg"
 
     else:
-        # Display a placeholder image
+        # Display a placeholder image while no images are uploaded
         uri = "/static/placeholder.png"
 
     return render_template("index.html", image_uri=uri)
-
-@app.route('/blur_pic', methods=["GET", "POST"])
-def blur_pic():
-    print ("Hello")
-              
-    uri = "/static/placeholder.png"      
-    return render_template("index.html", image_uri=uri)
-    
     
 # Function that extracts text from images
 def blur_faces(image, client):
@@ -85,14 +76,14 @@ def blur_faces(image, client):
     if not detected_faces:
         print("No faces found in image")
         return
-    else:
+    else:   
         for face in detected_faces:
             print(face.face_id)
             
     response = request.files["file"]
     img = Image.open(response)
     
-    # Create mask
+    # Create mask for all faces in image
     mask = Image.new('L', img.size, 0)
     
     drawMask = ImageDraw.Draw(mask)
