@@ -1,0 +1,5 @@
+Flask
+requests
+PIL
+azure.cognitiveservices.vision.face
+azure.cognitiveservices.vision.face.models
